@@ -5,11 +5,13 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   const { name = 'World' } = req.query;
   
   return res.json({
-    request: JSON.parse(JSON.stringify(req, getCircularReplacer())),
-    version: {
-      ...process.version
-    }
+    request: clone(req),
+    runtime: clone(process.version)
   });
+}
+
+function clone(obj: any) {
+  return JSON.parse(JSON.stringify(obj, getCircularReplacer()));
 }
 
 function getCircularReplacer() {
